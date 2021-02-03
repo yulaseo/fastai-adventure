@@ -13,6 +13,16 @@ import plotly.express as px
 import plotly.graph_objs as go
 import datetime
 from .utils import get_plot
+from rest_framework import viewsets
+from .serializers import StockSerializer
+from rest_framework import permissions
+
+class StockView(viewsets.ModelViewSet):
+    queryset = Stock.objects.all()
+    serializer_class = StockSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 def main(request):
     return render(request, 'stock/main.html')
